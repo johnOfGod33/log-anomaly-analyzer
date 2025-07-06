@@ -14,3 +14,11 @@ class Event:
     def get_event_datetime(self):
         """Convert timestamp string to datetime object"""
         return datetime.fromisoformat(self.timestamp.replace("Z", "+00:00"))
+
+    def to_dict(self):
+        return {
+            "event_id": self.event_id,
+            "event_type": self.event_type,
+            "timestamp": self.timestamp,
+            "message": self.message,
+        }

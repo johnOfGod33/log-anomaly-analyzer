@@ -32,8 +32,12 @@ async def read_logs(file):
             if cpt % 3 == 0:
                 if event_analyzer.detect_alerts():
                     event_logger.log_alert()
+                    event_analyzer.save_alert()
 
             await asyncio.sleep(2)
+
+    with open("alerts.json", "w") as f:
+        json.dump(event_analyzer.alerts, f)
 
 
 def create_event(event_json: dict):

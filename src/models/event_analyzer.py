@@ -6,7 +6,7 @@ from .event import Event
 class EventAnalyzer:
     def __init__(self):
         self.events: list[Event] = []
-        self.alerts: list[Event] = []
+        self.alerts: list[dict] = []
 
     def add_event(self, event: Event):
         self.events.append(event)
@@ -31,3 +31,11 @@ class EventAnalyzer:
 
     def get_last_events(self):
         return self.events[-3:]
+
+    def save_alert(self):
+        events = self.get_last_events()
+        alert = {
+            "alert_id": len(self.alerts) + 1,
+            "events": [event.to_dict() for event in events],
+        }
+        self.alerts.append(alert)
