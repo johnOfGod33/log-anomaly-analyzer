@@ -39,6 +39,9 @@ async def read_logs(file):
     with open("alerts.json", "w") as f:
         json.dump(event_analyzer.alerts, f)
 
+    event_analyzer.generate_histogram()
+    event_analyzer.write_report()
+
 
 def create_event(event_json: dict):
     event_id = event_json["event_id"]
