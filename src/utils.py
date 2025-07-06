@@ -9,9 +9,18 @@ from models.event_logger import EventLogger
 async def read_logs(file):
     event_logger = EventLogger()
     event_analyzer = EventAnalyzer()
+
     with open(file, "r") as f:
+        cpt = 0
+
         for line in f:
             line = line.strip()
+
+            if line == "":
+                continue
+
+            cpt += 1
+
             event_json = json.loads(line)
 
             event = create_event(event_json)
@@ -19,6 +28,11 @@ async def read_logs(file):
             event_analyzer.add_event(event)
 
             event_logger.log_event(event)
+
+            if cpt % 3 == 0:
+                if event_analyzer.detect_alerts():
+                    event_logger.log_alert()
+
             await asyncio.sleep(2)
 
 
