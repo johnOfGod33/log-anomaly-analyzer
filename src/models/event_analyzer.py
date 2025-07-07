@@ -32,7 +32,7 @@ class EventAnalyzer:
                 is_critical = False
                 break
 
-        return is_critical and interval < timedelta(seconds=30)
+        return is_critical and interval <= timedelta(seconds=30)
 
     def get_last_events(self):
         return self.events[-3:]
