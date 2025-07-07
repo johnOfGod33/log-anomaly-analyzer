@@ -7,10 +7,9 @@ from models.event_logger import EventLogger
 
 
 async def read_logs(file):
-    event_logger = EventLogger()
-    event_analyzer = EventAnalyzer()
-
     with open(file, "r") as f:
+        event_logger = EventLogger()
+        event_analyzer = EventAnalyzer()
         cpt = 0
 
         for line in f:
@@ -30,16 +29,11 @@ async def read_logs(file):
             event_logger.log_event(event)
 
             if event_analyzer.detect_alerts():
-                event_logger.log_alert()
                 event_analyzer.save_alert()
 
-            # await asyncio.sleep(2)
+            await asyncio.sleep(2)
 
-    with open("alerts.json", "w") as f:
-        json.dump(event_analyzer.alerts, f)
-
-    event_analyzer.generate_histogram()
-    event_analyzer.write_report()
+        return event_analyzer, event_logger
 
 
 def create_event(event_json: dict):
@@ -53,3 +47,16 @@ def create_event(event_json: dict):
         timestamp=timestamp,
         message=message,
     )
+
+
+def show_alerts(event_analyzer: EventAnalyzer, event_logger: EventLogger):
+    alerts = event_analyzer.alerts
+    event_logger.log_alerts(alerts)
+
+
+def generate_report(event_analyzer: EventAnalyzer):
+    with open("alerts.json", "w") as f:
+        json.dump(event_analyzer.alerts, f)
+
+    event_analyzer.generate_histogram()
+    event_analyzer.write_report()
